@@ -1,3 +1,10 @@
+search_log.reports:
+  path: '/admin/reports/search'
+  defaults:
+    _title: 'Top search terms'
+    _controller: '\Drupal\search_log\Controller\SearchLogReportController'
+  requirements:
+    _permission: 'administer search' 
 search_log.admin_config:
   path: '/admin/config/search/search_log'
   defaults:

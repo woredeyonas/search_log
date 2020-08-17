@@ -1,0 +1,5 @@
+services:
+  simple_module.route_subscriber:
+    class: Drupal\search_log\Routing\RouteSubscriber
+    tags:
+      - { name: event_subscriber }

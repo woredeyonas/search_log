@@ -1,0 +1,8 @@
+search_log.admin_config:
+  path: '/admin/config/search/search_log'
+  defaults:
+    defaults:
+    _title: 'Search log'
+    _form: 'Drupal\search_log\Form\SearchLogConfigForm'
+  requirements:
+    _permission: 'administer search'

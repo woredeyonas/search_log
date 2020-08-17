@@ -1,0 +1,99 @@
+<?php
+
+/**
+ * @file
+ * Install file for the Search log module.
+ */
+
+use Drupal\Core\Link;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\Url;
+
+/**
+ * Implements hook_schema().
+ */
+function search_log_schema() {
+  $schema['search_log'] = [
+    'description' => 'Log of search terms.',
+    'fields' => [
+      'qid' => [
+        'type' => 'serial',
+        'not null' => TRUE,
+        'description' => 'Primary Key: Auto-incrementing query ID.',
+      ],
+      'q' => [
+        'description' => 'Query string.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ],
+      'module' => [
+        'description' => 'Module implementing search.',
+        'type' => 'varchar',
+        'length' => 64,
+        'not null' => TRUE,
+        'default' => '',
+      ],
+      'language' => [
+        'description' => 'Language of the query.',
+        'type' => 'varchar',
+        'length' => 12,
+        'not null' => TRUE,
+        'default' => '',
+      ],
+      'day' => [
+        'description' => 'Day query was performed.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+      'counter' => [
+        'description' => 'Number of times query performed on day.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'size' => 'medium',
+      ],
+      'result' => [
+        'description' => 'Indicator of failed or successful query.',
+        'type' => 'int',
+        'size' => 'tiny',
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+    ],
+    'primary key' => ['qid'],
+    'unique keys' => [
+      'q_mod_day' => ['q', 'module', 'day'],
+    ],
+    'indexes' => [
+      'mod' => ['module'],
+      'day' => ['day'],
+    ],
+  ];
+
+  return $schema;
+}
+
+/**
+ * Implements hook_install().
+ */
+function search_log_install() {
+  $url = Url::fromUserInput('/admin/config/search/search_log');
+  $link = Link::fromTextAndUrl('configure Search log', $url)->toString();
+  $message = new TranslatableMarkup("Search log table installed. @link", [
+    '@link' => $link,
+  ]);
+  \Drupal::messenger()->addMessage($message, 'status');
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function search_log_uninstall() {
+  \Drupal::database()->schema()->dropTable('search_log');
+  \Drupal::messenger()->addMessage('Search log table and variables removed.', 'status');
+}

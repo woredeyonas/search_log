@@ -1,0 +1,6 @@
+search_log.admin_config:
+  title: 'Search Log'
+  parent: system.admin_config_search
+  description: 'Configure search plog.'
+  route_name: search_log.admin_config
+  weight: -10

@@ -1,0 +1,13 @@
+name: Search Log
+description: Replaces default search log of top search terms.
+core: 8.x
+core_version_requirement: ^8 || ^9
+type: module
+
+dependencies:
+  - drupal:search
+
+# Information added by Drupal.org packaging script on 2020-08-15
+version: '8.x-1.x-dev'
+project: 'search_log'
+datestamp: 1597519187

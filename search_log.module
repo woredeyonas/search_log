@@ -1,6 +1,71 @@
 <?php
 
+define('SEARCH_LOG_RESULT_UNKNOWN', 0);
+define('SEARCH_LOG_RESULT_SUCCESS', 1);
+define('SEARCH_LOG_RESULT_FAILED', -1);
+
+define('SEARCH_LOG_TERMS_LOWERCASE', 0);
+define('SEARCH_LOG_TERMS_UPPERCASE_FIRST', 1);
+define('SEARCH_LOG_TERMS_UPPERCASE_WORDS', 2);
+
+define('SEARCH_LOG_ADMIN_TERM_LENGTH', 50);
+define('SEARCH_LOG_ADMIN_ROWS', 40);
+
+define('SEARCH_LOG_DAY', 86400);
+
+
+
 /**
  * @file
  * This module holds functions of Search Log Module.
  */
+
+/**
+ * Implements hook_theme().
+ */
+function search_log_theme() {
+    return array(
+      'search_log_report' => array(
+        'variables' => array('summary' => NULL, 'filters' => NULL, 'table' => NULL, 'pager' => NULL),
+      ),
+      'search_log_summary' => array(
+        'variables' => array('total' => 0, 'unique' => 0, 'failed' => 0),
+      ),
+    );
+  }
+
+/**
+ * Utility time function.
+ *
+ * Effectively returns time() rounded down to nearest day.
+ */
+function _search_log_get_time() {
+    static $today;
+  
+    if (!isset($today)) {
+      $today = mktime(0, 0, 0);
+    }
+  
+    return $today;
+  }  
+
+
+/**
+ * Internal function to add filter conditions.
+ */
+function _search_log_get_query_filter(&$query, $time = array(), $filter = array(), $result_filter = TRUE) {
+    if ($result_filter) {
+      if ($filter['result'] == SEARCH_LOG_RESULT_SUCCESS) {
+        $query->condition('result', SEARCH_LOG_RESULT_UNKNOWN, '>=');
+      }
+      elseif ($filter['result'] == SEARCH_LOG_RESULT_FAILED) {
+        $query->condition('result', SEARCH_LOG_RESULT_FAILED, '=');
+      }
+    }
+    if (!empty($filter['modules'])) {
+      $query->condition('module', $filter['modules'], 'IN');
+    }
+    if (!empty($filter['languages'])) {
+      $query->condition('language', $filter['languages'], 'IN');
+    }
+  }  

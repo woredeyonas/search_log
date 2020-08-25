@@ -18,7 +18,7 @@ class RouteSubscriber extends RouteSubscriberBase {
   public function alterRoutes(RouteCollection $collection) {
     if ($route = $collection->get('dblog.search')) {
       $route->setDefaults(array(
-        '_controller' => '\Drupal\search_log\Controller\SearchLogReportController::report',
+        '_controller' => '\Drupal\search_log\Controller\SearchLogReportController::search_log_report',
       ));
     }
   }

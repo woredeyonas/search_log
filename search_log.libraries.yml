@@ -1,0 +1,5 @@
+search-log-report:
+    css:
+      theme:
+        css/search_log.css: {}
+  
